@@ -1,1 +1,1 @@
-# This project is the initial setting frontend with react, graphql, apollo
+# This project is making shoppinmall with react, graphql and apollo
