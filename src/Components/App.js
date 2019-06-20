@@ -33,7 +33,7 @@ function App() {
         <GlobalStyles />
         <Router>
           <>
-            {isLoggedIn && <Header />}
+            <Header isLoggedIn={isLoggedIn}/>
             <Wrapper>
               <Routes isLoggedIn={isLoggedIn} />
               <Footer />

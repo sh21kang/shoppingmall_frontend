@@ -1,5 +1,7 @@
 export const defaults = {
-  isLoggedIn: Boolean(localStorage.getItem("token")) || false
+  isLoggedIn: Boolean(localStorage.getItem("token")) || false,
+  getOrder: localStorage.getItem("order"),
+  getCart: localStorage.getItem("cart"),
 };
 
 export const resolvers = {
@@ -17,6 +19,15 @@ export const resolvers = {
       localStorage.removeItem("token");
       window.location = "/";
       return null;
+    },
+    setOrder :(_,{ order }) =>{
+      localStorage.setItem("order",order);
+      return null;
+    },
+    setCart :(_,{ cart }) =>{
+      localStorage.setItem("cart",cart);
+      return null;
     }
   }
+  
 };
