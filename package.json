@@ -18,11 +18,11 @@
     "styled-reset": "^2.0.14"
   },
   "scripts": {
-    "serve": "serve -s build",
-    "start": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev" : "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
