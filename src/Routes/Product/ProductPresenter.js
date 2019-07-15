@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Loader from "../../Components/Loader";
 import { Link} from "react-router-dom";
 
+
 export default ({loading , data, onCheck, item,total, DeleteItem,onCount,AddToCart,
     BuyNow,
     AddToWishList})=> {
@@ -105,6 +106,7 @@ export default ({loading , data, onCheck, item,total, DeleteItem,onCount,AddToCa
     
     }
 };
+
 
 const TextBox = styled.div`
 min-width: 70px;

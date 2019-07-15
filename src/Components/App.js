@@ -10,19 +10,21 @@ import Theme from "../Styles/Theme";
 import Routes from "./Routes";
 import Footer from "./Footer";
 import Header from "./Header";
-
+import Sidebar from "./Sidebar";
 const QUERY = gql`
   {
     isLoggedIn @client
   }
 `;
 const Wrapper = styled.div`
-  margin: 0 auto;
-  max-width: ${props => props.theme.maxWidth};
-  width: 100%;
+  margin: 10px 0 0;
+  width: ${window.innerWidth- 220}px;
+  /* max-width: ${props => props.theme.maxWidth}; */
+  /* width: 100%; */
+  float: right;
 `;
 
-function App() {
+function App({client}) {
   const {
     data: { isLoggedIn }
   } = useQuery(QUERY);
@@ -33,9 +35,10 @@ function App() {
         <GlobalStyles />
         <Router>
           <>
-            <Header isLoggedIn={isLoggedIn}/>
+            <Sidebar/>
             <Wrapper>
-              <Routes isLoggedIn={isLoggedIn} />
+            <Header isLoggedIn={isLoggedIn}/>
+              <Routes isLoggedIn={isLoggedIn} client={client}/>
               <Footer />
             </Wrapper>
           </>

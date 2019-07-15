@@ -43,15 +43,15 @@ const WeeklyWrapper = styled.div`
 display:flex;
 justify-content: space-between;
 width :100%;
-
+padding : 10px;
 `
 
 const WeeklyImage = styled.img`
-width :200px;
+width :170px;
 `
 
 const BigImage = styled.img`
-width :390px;
+width :340px;
 `
 const MainImage = styled.img`
 
@@ -77,11 +77,12 @@ width:25%;
 text-align : center;
 vertical-align: middle;
 line-height: 49px;
+font-weight :${props => props.truth ? 'bold' : 'normal'};
 `
 
 const ItemWrapper = styled.div`
 
-
+width :340px;
 `
 
 const Price =styled.div`
@@ -103,8 +104,8 @@ const NameWrapper =({name}) =>{
 
 
 
-export default ({ loading, main,weekly,best,newP})=> {
-        console.log(weekly);
+export default ({ loading, main,weekly,best,newP,ChangeBest,type})=> {
+        
     if (loading === true) {
         return(
             <Wrapper>
@@ -118,9 +119,11 @@ export default ({ loading, main,weekly,best,newP})=> {
         </Helmet>
         <CommonWrapper>
             <MainWrapper>
+                {main[0] !==undefined ?
                 <Link to={`/product/${main[0].id}`} >
                     <MainImage src={main[0].files[0].url} alt="main"/>
                 </Link>
+                    : null}
             </MainWrapper>
         </CommonWrapper>
         <CommonWrapper>
@@ -159,10 +162,10 @@ export default ({ loading, main,weekly,best,newP})=> {
         <CommonWrapper>
             <Subject>BEST ITEMS</Subject>
                 <BestMenu>
-                    <SmallDiv><span>OUTER</span></SmallDiv>
-                    <SmallDiv><span>TOP</span></SmallDiv>
-                    <SmallDiv><span>BOTTOM</span></SmallDiv>
-                    <SmallDiv><span>DRESS</span></SmallDiv>
+                    <SmallDiv truth={type==='outer'}><span onClick={()=>ChangeBest('outer')} value='outer'>OUTER</span></SmallDiv>
+                    <SmallDiv truth={type==='top'}><span onClick={()=>ChangeBest('top')} value='top'>TOP</span></SmallDiv>
+                    <SmallDiv truth={type==='bottom'}><span onClick={()=>ChangeBest('bottom')} value='bottom'>BOTTOM</span></SmallDiv>
+                    <SmallDiv truth={type==='dress'}><span onClick={()=>ChangeBest('dress')} value='dress'>DRESS</span></SmallDiv>
                 </BestMenu>
                 <BestWrapper>
                     {best.map(ele=>

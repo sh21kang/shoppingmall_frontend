@@ -17,6 +17,8 @@ export const resolvers = {
     },
     logUserOut: (_, __, { cache }) => {
       localStorage.removeItem("token");
+      localStorage.removeItem("cart");
+      localStorage.removeItem("order");
       window.location = "/";
       return null;
     },
@@ -24,8 +26,15 @@ export const resolvers = {
       localStorage.setItem("order",order);
       return null;
     },
-    setCart :(_,{ cart }) =>{
-      localStorage.setItem("cart",cart);
+    setCart :async (_,{ cart }) =>{
+      var tmp  = await localStorage.getItem("cart");
+      if(tmp===null){
+        localStorage.setItem("cart",cart);
+      }
+      else{
+        var tmp2 = [...JSON.parse(tmp), ...JSON.parse(cart)];
+        localStorage.setItem("cart",JSON.stringify(tmp2));
+      }
       return null;
     }
   }

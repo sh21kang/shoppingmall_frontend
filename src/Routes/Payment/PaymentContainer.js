@@ -33,10 +33,7 @@ const ADD_ORDER = gql`
 
 `
 
-
-
-
-const QUERY = gql`
+const GETORDER_QUERY = gql`
   {
     getOrder @client
   }
@@ -52,25 +49,166 @@ const SEE_USER =gql`
     }
 }
 `;
+const QUERY = gql`
+  {
+    isLoggedIn @client
+  }
+`;
 
-// name
-// phone
-// email
-// recipient
-// recipientPhone
-// address
-// message
-// info
-// payment
 
-let tmpArr =[];
-let tmpArr2 =[];
+let tmpArr = [];
+let tmpArr2 = [];
+
+
+const LoggedInContainer = ({productList,item,setItem,setPrice,price,message,recipientPhone,recipient,name,email,phone,address,info,payment,onPaymentMethod,onPayment}) =>{
+  let { data : {seeUser}} = useQuery(SEE_USER);
+
+useEffect(()=>{
+    if(seeUser){
+
+      name.setValue(seeUser.name);
+      address.setValue(seeUser.address);
+      phone.setValue(seeUser.phone);
+      email.setValue(seeUser.email);
+      recipientPhone.setValue(seeUser.phone);
+      recipient.setValue(seeUser.name);
+    }
+  },[seeUser]);
+
+
+  const { data:{seeProducts}, loading } = useQuery(See_Products, {
+    variables: {
+     id:  productList
+    }
+  });
+
+  
+
+useEffect(()=>{
+  console.log(item)
+  if(seeProducts !==undefined && seeProducts.length !==0 &&item !== undefined){
+    let sum = 0;
+    
+      const tmp = item.map(ele=>{
+        const tmp2  = seeProducts.find(ele2 => ele2.id === ele.productId)
+        sum+= ele.count * tmp2.price
+        return {
+          ...ele,
+          files : tmp2.files,
+          name : tmp2.name,
+          price : tmp2.price,
+          shippingFee : tmp2.shippingFee
+        }
+      })
+
+    const shippingFee = seeProducts[0].shippingFee || 2500
+    setItem(tmp)
+    setPrice([sum, shippingFee, sum+shippingFee])
+  }
+},[seeProducts,loading])
+
+  return ( <PaymentPresenter
+    data={seeProducts}
+    item={item}
+    price={price}
+    loading ={loading}
+    message={message}
+    recipientPhone={recipientPhone}
+    recipient={recipient}
+    name={name}
+    email={email}
+    phone={phone}
+    address={address}
+    info={info}
+    payment={payment}
+    onPaymentMethod={onPaymentMethod}
+    onPayment={onPayment}
+    />)
+}
+
+const LoggedOutContainter = ({productList,item,setItem,setPrice,price,message,recipientPhone,recipient,name,email,phone,address,info,payment,onPaymentMethod,onPayment}) =>{
+
+
+  const { data:{seeProducts}, loading } = useQuery(See_Products, {
+    variables: {
+     id:  productList
+    }
+  });
+
+  
+
+useEffect(()=>{
+  console.log(item)
+  if(seeProducts !==undefined && seeProducts.length !==0 &&item !== undefined){
+    let sum = 0;
+    
+      const tmp = item.map(ele=>{
+        const tmp2  = seeProducts.find(ele2 => ele2.id === ele.productId)
+        sum+= ele.count * tmp2.price
+        return {
+          ...ele,
+          files : tmp2.files,
+          name : tmp2.name,
+          price : tmp2.price,
+          shippingFee : tmp2.shippingFee
+        }
+      })
+
+    const shippingFee = seeProducts[0].shippingFee || 2500
+    setItem(tmp)
+    setPrice([sum, shippingFee, sum+shippingFee])
+  }
+},[seeProducts,loading])
+
+
+
+return ( <PaymentPresenter
+  data={seeProducts}
+  item={item}
+  price={price}
+  loading ={loading}
+  message={message}
+  recipientPhone={recipientPhone}
+  recipient={recipient}
+  name={name}
+  email={email}
+  phone={phone}
+  address={address}
+  info={info}
+  payment={payment}
+  onPaymentMethod={onPaymentMethod}
+  onPayment={onPayment}
+  />)
+}
+
+
 export default withRouter(({ history}) => {
-  const { data:{seeUser}, loading2 } = useQuery(SEE_USER);
+  const {data : {isLoggedIn}} =  useQuery(QUERY);
+ 
   const addOrderMutation = useMutation(ADD_ORDER);
-  const {data:{getOrder}} =  useQuery(QUERY);
+  const {data:{getOrder}, loading2} =  useQuery(GETORDER_QUERY);
   const [price, setPrice] = useState([]);
-  let item =JSON.parse(getOrder)
+  const [item , setItem]  = useState([]);
+  const [productList, setProductList] = useState([]);
+  
+
+  useEffect(()=>{
+    if(getOrder!==undefined){
+
+      const tmp = JSON.parse(getOrder)
+      let tmp2 = []
+        setItem(tmp)
+        console.log(tmp)
+        for(let ele of tmp){
+          tmpArr.push({id: ele.selectionId})
+          tmpArr2.push( ele.cartId);
+          tmp2.push(ele.productId)
+        }
+        
+        setProductList(tmp2)
+    }
+
+  },[getOrder,loading2])
   
   const message= useInput("");
   const recipientPhone= useInput("");
@@ -82,57 +220,14 @@ export default withRouter(({ history}) => {
   const info= useInput("");
   const payment= useInput("");
   
-  useEffect(()=>{
-    for(let ele in item){
-      tmpArr.push({id:item[ele].selectionId});
-      tmpArr2.push(item[ele].cartId);
-    }
-  },[getOrder])
-
-  useEffect(()=>{
-    if(seeUser){
-
-      name.setValue(seeUser.name);
-      address.setValue(seeUser.address);
-      phone.setValue(seeUser.phone);
-      email.setValue(seeUser.email);
-      recipientPhone.setValue(seeUser.phone);
-      recipient.setValue(seeUser.name);
-    }
-  },[seeUser,loading2]);
-
-  let tmp =[];
-  for(let tp in item){
-    tmp.push(tp);
-  }
-  const { data, loading } = useQuery(See_Products, {
-    variables: {
-     id:tmp
-    }
-  });
-
-useEffect(()=>{
   
-  if(data.seeProducts !==undefined){
-    let sum = 0;
-
-    for(let ele of data.seeProducts ){
-      // console.log(ele.id)
-      sum += item[ele.id].count * ele.price
-  
-    }
-    const shippingFee = data.seeProducts[0].shippingFee || 2500
-  
-    setPrice([sum, shippingFee, sum+shippingFee])
-  }
-},[data.seeProducts,loading])
-
  const onPayment= async()=>{
    if(payment==="" ||name ===""||phone ===""||address ===""||recipient ===""||recipientPhone ===""){
      alert("필수항목을 채워야 합니다.")
      return;
    }
-
+   const boolSelId = tmpArr[0].id.substring(0,2) !=='id'
+   
    await addOrderMutation({ variables: {userInput:{
     message: message.value,
     recipientPhone:recipientPhone.value,
@@ -144,43 +239,32 @@ useEffect(()=>{
     info:info.value,
     payment:payment.value
    } , 
-   selectionId:tmpArr,
-   totalPrice:price[2],
-   cartId:tmpArr2
-     } });
+   selectionId:boolSelId? tmpArr : null,
+   totalPrice: price[2],
+   cartId:boolSelId? tmpArr2 : null,
+   wrapper: item.map(ele=>{
+     return {
+      productId : ele.productId,
+      color: ele.color,
+      size : ele.size,
+      count : ele.count
+     }
+   })
+  
+  
+  } });
+
      tmpArr=[];
      tmpArr2=[];
      await localStorage.removeItem("order");
      history.push('/order');
-  
  }
+
  const onPaymentMethod = (e) =>{
   const {target : {value}} =e
   payment.setValue(value);
  }
-  
-    return (
-     
-      <PaymentPresenter
-      data={data.seeProducts}
-      loading={loading}
-      loading2={loading2}
-      item={item}
-      price={price}
-      user={seeUser}
-      message={message}
-      recipientPhone={recipientPhone}
-      recipient={recipient}
-      name={name}
-      email={email}
-      phone={phone}
-      address={address}
-      info={info}
-      payment={payment}
-      onPaymentMethod={onPaymentMethod}
-      onPayment={onPayment}
-      />
-       
-      
-      );
+
+    return isLoggedIn ? LoggedInContainer({productList,item,setItem,setPrice,price,message,recipientPhone,recipient,name,email,phone,address,info,payment,onPaymentMethod,onPayment}) :
+    LoggedOutContainter({productList,item,setItem,setPrice,price,message,recipientPhone,recipient,name,email,phone,address,info,payment,onPaymentMethod,onPayment})
     });

@@ -4,34 +4,29 @@ import Loader from "../../Components/Loader";
 import { Link} from "react-router-dom";
 
 
-const LogoutCart = () =>{
-
-    
-
-}
 
 const LoginCart = ({data,item}) =>(
 
-    data.map((ele, i)=>
-        <TabelHeader key={ele.id}>
+    item.map((ele)=>
+        <TabelHeader key={ele.cartId}>
         
            
             {/* <TabelSub></TabelSub> */}
             <TabelSub align="center"><Link to={`/product/${ele.id}`}>
-              
-               <SmallImage src={ele.files[0].url} alt="img"></SmallImage>
+              {ele.files !== undefined ? <SmallImage src={ele.files[0].url} alt="img"></SmallImage>:null}
+               
                 </Link></TabelSub>
             <TabelSub align="center"> 
             <Link to={`/product/${ele.id}`}>
             {ele.name}
             </Link>
-            <OptionTag><div>옵션 :{" "+item[ele.id].color}/{item[ele.id].size} </div></OptionTag>
+            <OptionTag><div>옵션 :{" "+ele.color}/{ele.size} </div></OptionTag>
             </TabelSub>
             <TabelSub> {ele.price}</TabelSub>
-            <TabelSub> {item[ele.id].count}</TabelSub>
+            <TabelSub> {ele.count}</TabelSub>
             <TabelSub> {ele.price/100}</TabelSub>
             <TabelSub> {ele.shippingFee ||2500}원</TabelSub>
-            <TabelSub> {ele.shippingFee||2500 + item[ele.id].count*ele.price}원</TabelSub>
+            <TabelSub> {ele.shippingFee||2500 + ele.count*ele.price}원</TabelSub>
         </TabelHeader>
         ));
         
@@ -74,7 +69,9 @@ export default ({loading,loading2, data,price,onPayment, item,
                     <TabelSub>합계</TabelSub>
             
             </TabelHeader>
-          <LoginCart data={data} item={item}/>
+            
+            {item.length > 0  ? <LoginCart data={data} item={item}/> : null}
+         
             
             </TbodyStyle>
         </Tabel>

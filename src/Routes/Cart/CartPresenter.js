@@ -4,19 +4,15 @@ import Loader from "../../Components/Loader";
 import { Link} from "react-router-dom";
 
 
-const LogoutCart = () =>{
-
-    
-
-}
 
 const LoginCart = ({data,onCheck}) =>(
 
-    data.map(ele=>
-        <TabelHeader key={ele.id}>
+    data.map( (ele,i) =>{
+       return  <TabelHeader key={ele.id+i}>
         
             <TabelSub><input type="checkbox" id={ele.id} name="foo" onClick={()=>onCheck(ele.id,ele.selection.id)}/></TabelSub>
             {/* <TabelSub></TabelSub> */}
+            
             <TabelSub align="center"><Link to={`/product/${ele.selection.product.id}`}>
               
                <SmallImage src={ele.selection.product.files[0].url} alt="img"></SmallImage>
@@ -33,7 +29,7 @@ const LoginCart = ({data,onCheck}) =>(
             <TabelSub> {ele.selection.product.shippingFee ||2500}원</TabelSub>
             <TabelSub> {ele.selection.product.shippingFee||2500 + ele.selection.count*ele.selection.product.price}원</TabelSub>
         </TabelHeader>
-        ));
+        }));
         
 
 
@@ -65,10 +61,11 @@ export default ({loading, data,isLoggedIn,onCheck,onCheckAll, onDelete,onOrder,o
                     <TabelSub>합계</TabelSub>
             
             </TabelHeader>
-          {isLoggedIn ? <LoginCart data={data} onCheck={onCheck}/>: null}
+          <LoginCart data={data} onCheck={onCheck}/>
             
-            </TbodyStyle>
+        </TbodyStyle>
         </Tabel>
+          
             {!data.length ?
                 <EmptyWrapper><TabelEmpty>장바구니에 담긴 상품이 없습니다.</TabelEmpty></EmptyWrapper> :null
             }

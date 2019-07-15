@@ -7,16 +7,17 @@ import {  Logo } from "./Icons";
 const Header = styled.div`
   width: 100%;
   border: 0;
-  position: fixed;
-  top: 0;
+  /* position: fixed; */
+  top: 0px;
   left: 0;
   background-color: white;
+  margin-bottom : 30px;
   border-bottom: ${props => props.theme.boxBorder};
   border-radius: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 25px 0px;
+  padding: 25px 25px;
   z-index: 2;
 `;
 
@@ -119,11 +120,25 @@ export default withRouter(({ history, isLoggedIn}) => {
         </ColumnWrapper>
       </HeaderWrapper>
     </Header>
-    <ImageWrapper>
+    {/* <ImageWrapper>
       <Link to="/">
-        <img src="http://modernrobe.com/data/skin/front/thegray/img/banner/25714f4018f3ceaaefb947223c6d28ad_34393.jpg" alt="상단 로고" title="상단 로고"/>
+      <SubWrapper>
+
+        <Image src={require("Images/main.png")} alt="상단 로고" title="상단 로고"/>
+      </SubWrapper>
       </Link>
-    </ImageWrapper>
+    </ImageWrapper> */}
     </>
     );
   });
+
+  const Image = styled.img`
+  width: 80%;
+  max-width: 800px;
+  `
+  const SubWrapper = styled.div`
+  display: flex;
+  justify-content : center;
+  width : 100%;
+
+  `

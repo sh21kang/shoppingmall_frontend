@@ -57,6 +57,7 @@ const See_Product =gql`
 }
 `;
 
+
 export default withRouter(({ history,location :{pathname}}) => {
   const localOrderMutation = useMutation(LOCAL_ORDER);
   const localCartMutation = useMutation(LOCAL_CART);
@@ -127,7 +128,15 @@ export default withRouter(({ history,location :{pathname}}) => {
   
 
   const BuyNow = async ()=>{
-    await localOrderMutation({ variables: { order:JSON.stringify(item) } });
+    const tmp = item.map((ele,i)=>{
+      return {
+        ...ele,
+        cartId : 'id'+i,
+        selectionId : 'id'+i,
+      }
+    })
+
+    await localOrderMutation({ variables: { order:JSON.stringify(tmp) } });
     history.push('/payment');
   }
 
@@ -137,12 +146,12 @@ export default withRouter(({ history,location :{pathname}}) => {
       alert('필수 옵션을 선택해야 합니다.')
       return;
     }
+    await  localCartMutation({ variables: { cart:JSON.stringify(item) } });
     if(!isLoggedIn){
-    await  localCartMutation({ variables: { order:JSON.stringify(item) } });
+      console.log(item)
       history.push('/cart');
       return;
     }
-    console.log(item)
     await addCartMutation();
     history.push('/cart');
   }
