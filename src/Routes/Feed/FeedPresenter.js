@@ -80,6 +80,10 @@ line-height: 49px;
 font-weight :${props => props.truth ? 'bold' : 'normal'};
 `
 
+const WeeklyItemWrapper= styled.div`
+width :170px;
+`
+
 const ItemWrapper = styled.div`
 
 width :340px;
@@ -130,7 +134,7 @@ export default ({ loading, main,weekly,best,newP,ChangeBest,type})=> {
             <Subject>WEEKLY BEST</Subject>
             <WeeklyWrapper>
             {weekly.map(ele=>
-            <ItemWrapper key={ele.id}>
+            <WeeklyItemWrapper key={ele.id}>
 
             
             <Link to={`/product/${ele.id}`} >
@@ -138,7 +142,7 @@ export default ({ loading, main,weekly,best,newP,ChangeBest,type})=> {
             </Link>
             <NameWrapper name={ele.name}/>
                         <Price>{ele.price}원</Price>
-            </ItemWrapper>
+            </WeeklyItemWrapper>
             )}
             </WeeklyWrapper>
             
